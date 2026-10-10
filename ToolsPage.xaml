@@ -1,0 +1,57 @@
+<Page
+    x:Class="GhidraLens.ToolsPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:GhidraLens">
+    <Grid Padding="24,8,24,24" ColumnSpacing="16">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="320" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <Grid RowSpacing="12">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <TextBlock x:Name="CategoryTitle" Style="{StaticResource SubtitleTextBlockStyle}" />
+            <AutoSuggestBox x:Name="FilterBox" Grid.Row="1" PlaceholderText="Filter tools" QueryIcon="Find"
+                            TextChanged="FilterBox_TextChanged" />
+            <ListView x:Name="ToolList" Grid.Row="2" ItemsSource="{x:Bind Visible}" SelectionChanged="ToolList_SelectionChanged">
+                <ListView.ItemTemplate>
+                    <DataTemplate x:DataType="local:ToolDef">
+                        <StackPanel Margin="0,6">
+                            <TextBlock Text="{x:Bind Name}" FontSize="17" />
+                            <TextBlock Text="{x:Bind Method}" FontSize="12" Opacity="0.6" />
+                        </StackPanel>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+        </Grid>
+
+        <ScrollViewer Grid.Column="1">
+            <StackPanel Spacing="12" Padding="0,0,12,0">
+                <TextBlock x:Name="ToolTitle" Style="{StaticResource TitleTextBlockStyle}" Text="Select a tool" />
+                <TextBlock x:Name="ToolDescription" TextWrapping="Wrap" Opacity="0.85" FontSize="16" />
+                <StackPanel x:Name="FormPanel" Spacing="12" />
+                <Button x:Name="RunButton" Style="{StaticResource AccentButtonStyle}" Click="Run_Click" IsEnabled="False">
+                    <StackPanel Orientation="Horizontal" Spacing="8"><FontIcon Glyph="&#xE768;" /><TextBlock Text="Run" /></StackPanel>
+                </Button>
+            </StackPanel>
+        </ScrollViewer>
+
+        <Border Grid.Column="2" CornerRadius="8" Padding="16"
+                Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1">
+            <Grid>
+                <ScrollViewer HorizontalScrollBarVisibility="Auto">
+                    <TextBlock x:Name="ResultText" FontFamily="Cascadia Mono, Consolas" FontSize="16"
+                               IsTextSelectionEnabled="True" TextWrapping="NoWrap" />
+                </ScrollViewer>
+                <ProgressRing x:Name="Busy" Width="56" Height="56" IsActive="False" />
+            </Grid>
+        </Border>
+    </Grid>
+</Page>

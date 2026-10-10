@@ -1,0 +1,84 @@
+<Page
+    x:Class="GhidraLens.PcodeStepperPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:GhidraLens">
+    <Grid Padding="24,8,24,24" RowSpacing="12" ColumnSpacing="16">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="3*" />
+            <ColumnDefinition Width="2*" />
+        </Grid.ColumnDefinitions>
+
+        <StackPanel Grid.ColumnSpan="2" Orientation="Horizontal" Spacing="8">
+            <TextBox x:Name="FunctionBox" Width="240" FontSize="18" PlaceholderText="Function address" />
+            <ComboBox x:Name="Granularity" SelectedIndex="0" VerticalAlignment="Center">
+                <x:String>high</x:String>
+                <x:String>low</x:String>
+            </ComboBox>
+            <Button Content="Load P-code" Style="{StaticResource AccentButtonStyle}" Click="Load_Click" />
+            <AppBarSeparator />
+            <Button Click="Reset_Click" ToolTipService.ToolTip="Reset to first op"><FontIcon Glyph="&#xE892;" /></Button>
+            <Button Click="StepBack_Click" ToolTipService.ToolTip="Step back (F7)">
+                <FontIcon Glyph="&#xE76B;" />
+                <Button.KeyboardAccelerators><KeyboardAccelerator Key="F7" /></Button.KeyboardAccelerators>
+            </Button>
+            <Button Click="Step_Click" ToolTipService.ToolTip="Step (F8)">
+                <FontIcon Glyph="&#xE76C;" />
+                <Button.KeyboardAccelerators><KeyboardAccelerator Key="F8" /></Button.KeyboardAccelerators>
+            </Button>
+            <Button Click="StepInstruction_Click" ToolTipService.ToolTip="Step to next instruction (F10)">
+                <FontIcon Glyph="&#xE893;" />
+                <Button.KeyboardAccelerators><KeyboardAccelerator Key="F10" /></Button.KeyboardAccelerators>
+            </Button>
+            <TextBlock x:Name="PositionText" VerticalAlignment="Center" Margin="12,0,0,0" Opacity="0.8" />
+        </StackPanel>
+
+        <Border Grid.Row="1" CornerRadius="8" Padding="8" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1">
+            <ListView x:Name="OpsView" ItemsSource="{x:Bind Ops}" SelectionChanged="Ops_SelectionChanged">
+                <ListView.ItemContainerStyle>
+                    <Style TargetType="ListViewItem"><Setter Property="MinHeight" Value="28" /></Style>
+                </ListView.ItemContainerStyle>
+                <ListView.ItemTemplate>
+                    <DataTemplate x:DataType="local:Row">
+                        <TextBlock Text="{x:Bind Text}" FontFamily="Cascadia Mono, Consolas" FontSize="15" />
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+        </Border>
+
+        <Grid Grid.Row="1" Grid.Column="1" RowSpacing="12">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <Border CornerRadius="8" Padding="16" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                    BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1">
+                <ScrollViewer HorizontalScrollBarVisibility="Auto">
+                    <TextBlock x:Name="OpDetail" FontFamily="Cascadia Mono, Consolas" FontSize="15" IsTextSelectionEnabled="True" Text="Load a function to step through its P-code." />
+                </ScrollViewer>
+            </Border>
+            <StackPanel Grid.Row="1" Spacing="8">
+                <TextBlock Text="Emulate function" Style="{StaticResource BodyStrongTextBlockStyle}" />
+                <TextBox x:Name="RegistersBox" Header="Initial registers (JSON object)" Text="{}" FontFamily="Cascadia Mono, Consolas" />
+                <TextBox x:Name="MemoryBox" Header="Initial memory (JSON array)" Text="[]" FontFamily="Cascadia Mono, Consolas" />
+                <StackPanel Orientation="Horizontal" Spacing="8">
+                    <NumberBox x:Name="MaxSteps" Header="Max steps" Value="10000" Minimum="1" Width="140" SpinButtonPlacementMode="Hidden" />
+                    <TextBox x:Name="ReturnRegs" Header="Return registers" PlaceholderText="EAX,EDX" Width="200" />
+                    <Button Content="Run emulation" VerticalAlignment="Bottom" Click="Emulate_Click" />
+                </StackPanel>
+            </StackPanel>
+            <Border Grid.Row="2" CornerRadius="8" Padding="16" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                    BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1">
+                <ScrollViewer HorizontalScrollBarVisibility="Auto">
+                    <TextBlock x:Name="EmuResult" FontFamily="Cascadia Mono, Consolas" FontSize="15" IsTextSelectionEnabled="True" />
+                </ScrollViewer>
+            </Border>
+        </Grid>
+    </Grid>
+</Page>

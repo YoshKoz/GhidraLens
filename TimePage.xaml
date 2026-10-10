@@ -1,0 +1,62 @@
+<Page
+    x:Class="GhidraLens.TimePage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Grid Padding="24,8,24,24" RowSpacing="12" ColumnSpacing="16">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <StackPanel Grid.ColumnSpan="3" Orientation="Horizontal" Spacing="8">
+            <Button Click="Launch_Click"><StackPanel Orientation="Horizontal" Spacing="8"><FontIcon Glyph="&#xE768;" /><TextBlock Text="Launch..." /></StackPanel></Button>
+            <Button Click="Resume_Click" ToolTipService.ToolTip="Resume (F5)"><FontIcon Glyph="&#xE768;" /></Button>
+            <Button Click="Interrupt_Click" ToolTipService.ToolTip="Interrupt"><FontIcon Glyph="&#xE769;" /></Button>
+            <Button Click="StepInto_Click" ToolTipService.ToolTip="Step into (F11)">
+                <FontIcon Glyph="&#xE70D;" />
+                <Button.KeyboardAccelerators><KeyboardAccelerator Key="F11" /></Button.KeyboardAccelerators>
+            </Button>
+            <Button Click="StepOver_Click" ToolTipService.ToolTip="Step over (F10)">
+                <FontIcon Glyph="&#xE72A;" />
+                <Button.KeyboardAccelerators><KeyboardAccelerator Key="F10" /></Button.KeyboardAccelerators>
+            </Button>
+            <Button Click="StepOut_Click" ToolTipService.ToolTip="Step out (Shift+F11)">
+                <FontIcon Glyph="&#xE70E;" />
+                <Button.KeyboardAccelerators><KeyboardAccelerator Modifiers="Shift" Key="F11" /></Button.KeyboardAccelerators>
+            </Button>
+            <AppBarSeparator />
+            <TextBox x:Name="BreakAddr" Width="200" PlaceholderText="Breakpoint address" />
+            <Button Content="Set breakpoint" Click="SetBp_Click" />
+            <Button Content="Remove" Click="RemoveBp_Click" />
+            <Button Click="Refresh_Click"><StackPanel Orientation="Horizontal" Spacing="8"><FontIcon Glyph="&#xE72C;" /><TextBlock Text="Refresh" /></StackPanel></Button>
+            <TextBlock x:Name="StatusText" VerticalAlignment="Center" Margin="12,0,0,0" Opacity="0.8" />
+        </StackPanel>
+
+        <Border Grid.Row="1" CornerRadius="8" Padding="16" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1">
+            <StackPanel Spacing="4"><TextBlock Text="Time / traces" Style="{StaticResource CaptionTextBlockStyle}" Opacity="0.7" />
+                <ScrollViewer HorizontalScrollBarVisibility="Auto"><TextBlock x:Name="TracesText" FontFamily="Cascadia Mono, Consolas" FontSize="15" IsTextSelectionEnabled="True" /></ScrollViewer></StackPanel>
+        </Border>
+        <Border Grid.Row="1" Grid.Column="1" CornerRadius="8" Padding="16" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1">
+            <StackPanel Spacing="4"><TextBlock Text="Registers" Style="{StaticResource CaptionTextBlockStyle}" Opacity="0.7" />
+                <ScrollViewer HorizontalScrollBarVisibility="Auto"><TextBlock x:Name="RegistersText" FontFamily="Cascadia Mono, Consolas" FontSize="15" IsTextSelectionEnabled="True" /></ScrollViewer></StackPanel>
+        </Border>
+        <Border Grid.Row="1" Grid.Column="2" CornerRadius="8" Padding="16" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1">
+            <StackPanel Spacing="4"><TextBlock Text="Stack" Style="{StaticResource CaptionTextBlockStyle}" Opacity="0.7" />
+                <ScrollViewer HorizontalScrollBarVisibility="Auto"><TextBlock x:Name="StackText" FontFamily="Cascadia Mono, Consolas" FontSize="15" IsTextSelectionEnabled="True" /></ScrollViewer></StackPanel>
+        </Border>
+        <Border Grid.Row="2" Grid.ColumnSpan="2" CornerRadius="8" Padding="16" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1">
+            <StackPanel Spacing="4"><TextBlock Text="Breakpoints" Style="{StaticResource CaptionTextBlockStyle}" Opacity="0.7" />
+                <ScrollViewer HorizontalScrollBarVisibility="Auto"><TextBlock x:Name="BreakpointsText" FontFamily="Cascadia Mono, Consolas" FontSize="15" IsTextSelectionEnabled="True" /></ScrollViewer></StackPanel>
+        </Border>
+        <Border Grid.Row="2" Grid.Column="2" CornerRadius="8" Padding="16" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1">
+            <StackPanel Spacing="4"><TextBlock Text="Last action" Style="{StaticResource CaptionTextBlockStyle}" Opacity="0.7" />
+                <ScrollViewer HorizontalScrollBarVisibility="Auto"><TextBlock x:Name="ActionText" FontFamily="Cascadia Mono, Consolas" FontSize="15" IsTextSelectionEnabled="True" TextWrapping="Wrap" /></ScrollViewer></StackPanel>
+        </Border>
+    </Grid>
+</Page>

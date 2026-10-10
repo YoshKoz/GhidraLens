@@ -1,0 +1,53 @@
+<Page
+    x:Class="GhidraLens.ProgramPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:GhidraLens">
+    <Grid Padding="24,8,24,24" ColumnSpacing="16">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <Grid RowSpacing="12">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <TextBlock x:Name="ProjectTitle" Text="Project" Style="{StaticResource SubtitleTextBlockStyle}" />
+            <ListView x:Name="FilesList" Grid.Row="1" FontSize="18" ItemsSource="{x:Bind Files}"
+                      DoubleTapped="FilesList_DoubleTapped">
+                <ListView.ItemTemplate>
+                    <DataTemplate x:DataType="local:Row">
+                        <StackPanel Orientation="Horizontal" Spacing="12" Margin="0,6">
+                            <FontIcon Glyph="&#xE7C3;" FontSize="18" />
+                            <TextBlock Text="{x:Bind Text}" />
+                        </StackPanel>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+            <StackPanel Grid.Row="2" Orientation="Horizontal" Spacing="8">
+                <Button Style="{StaticResource AccentButtonStyle}" Click="Open_Click">
+                    <StackPanel Orientation="Horizontal" Spacing="8"><FontIcon Glyph="&#xE8E5;" /><TextBlock Text="Open" /></StackPanel>
+                </Button>
+                <CheckBox x:Name="AutoAnalyze" Content="Auto-analyze on open" />
+                <Button Click="Save_Click">
+                    <StackPanel Orientation="Horizontal" Spacing="8"><FontIcon Glyph="&#xE74E;" /><TextBlock Text="Save program" /></StackPanel>
+                </Button>
+                <Button Click="Refresh_Click">
+                    <StackPanel Orientation="Horizontal" Spacing="8"><FontIcon Glyph="&#xE72C;" /><TextBlock Text="Refresh" /></StackPanel>
+                </Button>
+            </StackPanel>
+        </Grid>
+
+        <Border Grid.Column="1" CornerRadius="8" Padding="16"
+                Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1">
+            <ScrollViewer HorizontalScrollBarVisibility="Auto">
+                <TextBlock x:Name="InfoText" FontFamily="Cascadia Mono, Consolas" FontSize="16"
+                           IsTextSelectionEnabled="True" TextWrapping="Wrap" />
+            </ScrollViewer>
+        </Border>
+    </Grid>
+</Page>
