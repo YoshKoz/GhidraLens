@@ -16,14 +16,18 @@
             </StackPanel>
         </Grid>
 
-        <Grid Grid.Row="1" Padding="4,0,16,4">
+        <Grid Grid.Row="1" Padding="4,0,16,4" ColumnSpacing="12">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
             <MenuBar>
                 <MenuBarItem Title="File">
                     <MenuFlyoutItem Text="Open program..." Click="OpenProgram_Click">
                         <MenuFlyoutItem.KeyboardAccelerators><KeyboardAccelerator Modifiers="Control" Key="O" /></MenuFlyoutItem.KeyboardAccelerators>
                     </MenuFlyoutItem>
                     <MenuFlyoutItem Text="Import file..." Click="ImportFile_Click">
-                        <MenuFlyoutItem.KeyboardAccelerators><KeyboardAccelerator Key="I" /></MenuFlyoutItem.KeyboardAccelerators>
+                        <MenuFlyoutItem.KeyboardAccelerators><KeyboardAccelerator Modifiers="Control" Key="I" /></MenuFlyoutItem.KeyboardAccelerators>
                     </MenuFlyoutItem>
                     <MenuFlyoutItem Text="Open project..." Click="OpenProject_Click" />
                     <MenuFlyoutSeparator />
@@ -42,10 +46,10 @@
 
                 <MenuBarItem Title="Edit">
                     <MenuFlyoutItem Text="Rename function..." Click="Rename_Click">
-                        <MenuFlyoutItem.KeyboardAccelerators><KeyboardAccelerator Key="L" /></MenuFlyoutItem.KeyboardAccelerators>
+                        <MenuFlyoutItem.KeyboardAccelerators><KeyboardAccelerator Modifiers="Control" Key="L" /></MenuFlyoutItem.KeyboardAccelerators>
                     </MenuFlyoutItem>
                     <MenuFlyoutItem Text="Set comment..." Click="Comment_Click">
-                        <MenuFlyoutItem.KeyboardAccelerators><KeyboardAccelerator Key="Number3" Modifiers="Shift" /></MenuFlyoutItem.KeyboardAccelerators>
+                        <MenuFlyoutItem.KeyboardAccelerators><KeyboardAccelerator Modifiers="Control" Key="K" /></MenuFlyoutItem.KeyboardAccelerators>
                     </MenuFlyoutItem>
                     <MenuFlyoutItem Text="Set prototype..." Click="Prototype_Click">
                         <MenuFlyoutItem.KeyboardAccelerators><KeyboardAccelerator Key="F" Modifiers="Control,Shift" /></MenuFlyoutItem.KeyboardAccelerators>
@@ -56,7 +60,7 @@
                     </MenuFlyoutItem>
                     <MenuFlyoutSeparator />
                     <MenuFlyoutItem Text="Go to address..." Click="Goto_Click">
-                        <MenuFlyoutItem.KeyboardAccelerators><KeyboardAccelerator Key="G" /></MenuFlyoutItem.KeyboardAccelerators>
+                        <MenuFlyoutItem.KeyboardAccelerators><KeyboardAccelerator Modifiers="Control" Key="G" /></MenuFlyoutItem.KeyboardAccelerators>
                     </MenuFlyoutItem>
                 </MenuBarItem>
 
@@ -80,7 +84,7 @@
 
                 <MenuBarItem Title="Analysis">
                     <MenuFlyoutItem Text="Auto analyze" Click="RunAnalysis_Click">
-                        <MenuFlyoutItem.KeyboardAccelerators><KeyboardAccelerator Key="A" /></MenuFlyoutItem.KeyboardAccelerators>
+                        <MenuFlyoutItem.KeyboardAccelerators><KeyboardAccelerator Modifiers="Control,Shift" Key="A" /></MenuFlyoutItem.KeyboardAccelerators>
                     </MenuFlyoutItem>
                     <MenuFlyoutItem Text="Re-analyze" Click="Reanalyze_Click" />
                     <MenuFlyoutItem Text="Analysis status" Click="AnalysisStatus_Click" />
@@ -118,13 +122,20 @@
                 </MenuBarItem>
             </MenuBar>
 
-            <StackPanel Orientation="Horizontal" Spacing="8" HorizontalAlignment="Right" VerticalAlignment="Center">
-                <Ellipse x:Name="StatusDot" Width="10" Height="10" Fill="Gray" />
-                <TextBlock x:Name="StatusText" Text="Not connected" VerticalAlignment="Center" />
-                <NumberBox x:Name="PortBox" Value="8089" Minimum="1" Maximum="65535" Width="100"
+            <Grid Grid.Column="1" ColumnSpacing="8" VerticalAlignment="Center">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <TextBlock x:Name="StatusText" Text="Not connected" VerticalAlignment="Center" HorizontalAlignment="Right"
+                           TextTrimming="CharacterEllipsis" />
+                <Ellipse x:Name="StatusDot" Grid.Column="1" Width="10" Height="10" Fill="Gray" />
+                <NumberBox x:Name="PortBox" Grid.Column="2" Value="8089" Minimum="1" Maximum="65535" Width="90"
                            SpinButtonPlacementMode="Hidden" />
-                <Button Content="Connect" Click="Connect_Click" />
-            </StackPanel>
+                <Button Grid.Column="3" Content="Connect" Click="Connect_Click" />
+            </Grid>
         </Grid>
 
         <NavigationView x:Name="Nav" Grid.Row="2" IsBackButtonVisible="Collapsed" IsSettingsVisible="False"

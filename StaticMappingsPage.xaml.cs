@@ -45,6 +45,6 @@ public sealed partial class StaticMappingsPage : Page
 
     private void OpenStatic_Click(object sender, RoutedEventArgs e)
     {
-        if (_lastStatic is not null) MainWindow.Current?.ShowCodeBrowser(_lastStatic);
+        if (_lastStatic is not null) MainWindow.Instance?.ShowCodeBrowser(_lastStatic);
     }
 }

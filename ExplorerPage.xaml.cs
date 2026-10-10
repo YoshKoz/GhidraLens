@@ -64,6 +64,6 @@ public sealed partial class ExplorerPage : Page
     private void ItemsList_DoubleTapped(object sender, Microsoft.UI.Xaml.Input.DoubleTappedRoutedEventArgs e)
     {
         if (ItemsList.SelectedItem is Row { Address: { } a } && !a.StartsWith("EXTERNAL", StringComparison.OrdinalIgnoreCase))
-            MainWindow.Current?.ShowFunctions(a);
+            MainWindow.Instance?.ShowFunctions(a);
     }
 }

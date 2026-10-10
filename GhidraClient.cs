@@ -65,7 +65,8 @@ public sealed class GhidraClient
 
     public async Task<(bool Ok, string Message)> PingAsync()
     {
-        try { return (true, await GetAsync("check_connection")); }
+        using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(5));
+        try { return (true, await GetAsync("check_connection", cts.Token)); }
         catch (Exception ex) { return (false, ex.Message); }
     }
 

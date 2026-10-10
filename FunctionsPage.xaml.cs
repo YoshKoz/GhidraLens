@@ -102,7 +102,7 @@ public sealed partial class FunctionsPage : Page
     }
 
     private static Task<string?> AskAsync(string title, string label, string initial = "") =>
-        MainWindow.Current!.AskAsync(title, label, initial, title == "Comment");
+        MainWindow.Instance!.AskAsync(title, label, initial, title == "Comment");
 
     private async Task RunAsync(Func<Task<string>> action, bool reload)
     {

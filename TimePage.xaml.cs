@@ -21,7 +21,7 @@ public sealed partial class TimePage : Page
     {
         var c = MainWindow.Client;
         var status = await Safe(() => c.GetAsync("debugger/status"));
-        StatusText.Text = status.Replace("\n", " ").Replace("  ", " ");
+        StatusText.Text = string.Join(" ", status.Split(['\r', '\n', '{', '}'], StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries));
         TracesText.Text = await Safe(() => c.GetAsync("debugger/traces"));
         RegistersText.Text = await Safe(() => c.GetAsync("debugger/registers"));
         StackText.Text = await Safe(() => c.GetAsync("debugger/stack_trace?depth=64"));
@@ -37,10 +37,10 @@ public sealed partial class TimePage : Page
     private async void Launch_Click(object sender, RoutedEventArgs e)
     {
         var picker = new FileOpenPicker();
-        WinRT.Interop.InitializeWithWindow.Initialize(picker, WinRT.Interop.WindowNative.GetWindowHandle(MainWindow.Current!));
+        WinRT.Interop.InitializeWithWindow.Initialize(picker, WinRT.Interop.WindowNative.GetWindowHandle(MainWindow.Instance!));
         picker.FileTypeFilter.Add(".exe");
         if (await picker.PickSingleFileAsync() is not { } file) return;
-        var args = await MainWindow.Current!.AskAsync("Launch", "Command-line arguments (optional)") ?? "";
+        var args = await MainWindow.Instance!.AskAsync("Launch", "Command-line arguments (optional)") ?? "";
         ActionText.Text = $"Launching {file.Path}...";
         await ActAsync("debugger/launch", new { executable_path = file.Path, args, cwd = Path.GetDirectoryName(file.Path) });
     }

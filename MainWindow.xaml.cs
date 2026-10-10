@@ -9,13 +9,13 @@ namespace GhidraLens;
 public sealed partial class MainWindow : Window
 {
     public static GhidraClient Client { get; } = new();
-    public static MainWindow? Current { get; private set; }
+    public static MainWindow? Instance { get; private set; }
 
     private string? _programName;
 
     public MainWindow()
     {
-        Current = this;
+        Instance = this;
         InitializeComponent();
         SystemBackdrop = new MicaBackdrop();
         ExtendsContentIntoTitleBar = true;
@@ -28,7 +28,7 @@ public sealed partial class MainWindow : Window
 
     public async Task ConnectAsync()
     {
-        Client.Port = (int)PortBox.Value;
+        Client.Port = double.IsNaN(PortBox.Value) ? 8089 : (int)PortBox.Value;
         var (ok, message) = await Client.PingAsync();
         var hasProgram = ok && message.Contains("with program", StringComparison.OrdinalIgnoreCase);
         _programName = hasProgram ? message.Replace("Connected: GhidraMCP plugin running with program ", "").Trim('\'', ' ') : null;
@@ -76,14 +76,14 @@ public sealed partial class MainWindow : Window
     {
         FunctionsPage.PendingAddress = address;
         FunctionsPage.PendingFilter = filter;
-        if (Nav.SelectedItem == FunctionsItem) ContentFrame.Navigate(typeof(FunctionsPage));
+        if (ReferenceEquals(Nav.SelectedItem, FunctionsItem)) ContentFrame.Navigate(typeof(FunctionsPage));
         else Nav.SelectedItem = FunctionsItem;
     }
 
     public void ShowCodeBrowser(string address)
     {
         CodeBrowserPage.PendingAddress = address;
-        if (Nav.SelectedItem == CodeBrowserItem) ContentFrame.Navigate(typeof(CodeBrowserPage));
+        if (ReferenceEquals(Nav.SelectedItem, CodeBrowserItem)) ContentFrame.Navigate(typeof(CodeBrowserPage));
         else Nav.SelectedItem = CodeBrowserItem;
     }
 

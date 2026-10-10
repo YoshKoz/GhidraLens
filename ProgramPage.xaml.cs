@@ -47,7 +47,7 @@ public sealed partial class ProgramPage : Page
         var auto = AutoAnalyze.IsChecked == true ? "true" : "false";
         var result = await SafeAsync(() => MainWindow.Client.GetAsync($"open_program?path={Uri.EscapeDataString(row.Text)}&auto_analyze={auto}"));
         InfoText.Text = GhidraClient.Pretty(result);
-        if (MainWindow.Current is { } w) await w.ConnectAsync();
+        if (MainWindow.Instance is { } w) await w.ConnectAsync();
     }
 
     private void Open_Click(object sender, RoutedEventArgs e) => _ = OpenSelectedAsync();
