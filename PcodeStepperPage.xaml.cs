@@ -40,13 +40,13 @@ public sealed partial class PcodeStepperPage : Page
         var addr = FunctionBox.Text.Trim();
         if (addr.Length == 0) return;
         Ops.Clear(); _details.Clear(); _instructions.Clear();
-        OpDetail.Text = "Loading...";
+        OpDetail.SetCode("Loading...");
         var c = MainWindow.Client;
         try
         {
             var gran = (string)Granularity.SelectedItem;
             using var doc = JsonDocument.Parse(await c.GetAsync($"get_function_pcode?function_address={GhidraClient.Hex(addr)}&granularity={gran}"));
-            if (doc.RootElement.TryGetProperty("error", out var err)) { OpDetail.Text = err.ToString(); return; }
+            if (doc.RootElement.TryGetProperty("error", out var err)) { OpDetail.SetCode(err.ToString()); return; }
 
             try
             {
@@ -70,9 +70,9 @@ public sealed partial class PcodeStepperPage : Page
                 }
             }
             if (Ops.Count > 0) OpsView.SelectedIndex = 0;
-            else OpDetail.Text = "No P-code returned.";
+            else OpDetail.SetCode("No P-code returned.");
         }
-        catch (Exception ex) { OpDetail.Text = ex.Message; }
+        catch (Exception ex) { OpDetail.SetCode(ex.Message); }
     }
 
     private void Ops_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -82,7 +82,7 @@ public sealed partial class PcodeStepperPage : Page
         var row = Ops[i];
         var instr = row.Address is { } a && _instructions.TryGetValue(a, out var s) ? s : "?";
         PositionText.Text = $"op {i + 1} / {Ops.Count}";
-        OpDetail.Text = $"Instruction @ {row.Address}:  {instr}\n\n{_details[i]}";
+        OpDetail.SetCode($"Instruction @ {row.Address}:  {instr}\n\n{_details[i]}");
         OpsView.ScrollIntoView(row);
     }
 
@@ -109,7 +109,7 @@ public sealed partial class PcodeStepperPage : Page
     private async void Emulate_Click(object sender, RoutedEventArgs e)
     {
         var tool = MainWindow.Client.Tools.FirstOrDefault(t => t.Path == "/emulate_function");
-        if (tool is null) { EmuResult.Text = "emulate_function endpoint not available."; return; }
+        if (tool is null) { EmuResult.SetCode("emulate_function endpoint not available."); return; }
         var values = new Dictionary<string, string>
         {
             ["address"] = GhidraClient.Hex(FunctionBox.Text.Trim()),
@@ -118,8 +118,8 @@ public sealed partial class PcodeStepperPage : Page
             ["max_steps"] = ((int)MaxSteps.Value).ToString(),
             ["return_registers"] = ReturnRegs.Text,
         };
-        EmuResult.Text = "Emulating...";
-        try { EmuResult.Text = GhidraClient.Pretty(await MainWindow.Client.CallAsync(tool, values)); }
-        catch (Exception ex) { EmuResult.Text = ex.Message; }
+        EmuResult.SetCode("Emulating...");
+        try { EmuResult.SetCode(GhidraClient.Pretty(await MainWindow.Client.CallAsync(tool, values))); }
+        catch (Exception ex) { EmuResult.SetCode(ex.Message); }
     }
 }

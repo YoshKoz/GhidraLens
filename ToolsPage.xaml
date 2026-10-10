@@ -47,7 +47,7 @@
                 BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1">
             <Grid>
                 <ScrollViewer HorizontalScrollBarVisibility="Auto">
-                    <TextBlock x:Name="ResultText" FontFamily="Cascadia Mono, Consolas" FontSize="16"
+                    <RichTextBlock x:Name="ResultText" FontFamily="Cascadia Mono, Consolas" FontSize="16"
                                IsTextSelectionEnabled="True" TextWrapping="NoWrap" />
                 </ScrollViewer>
                 <ProgressRing x:Name="Busy" Width="56" Height="56" IsActive="False" />

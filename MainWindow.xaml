@@ -39,6 +39,9 @@
                     </MenuFlyoutItem>
                     <MenuFlyoutItem Text="Close program" Click="CloseProgram_Click" />
                     <MenuFlyoutSeparator />
+                    <MenuFlyoutItem Text="Settings..." Click="Settings_Click">
+                        <MenuFlyoutItem.KeyboardAccelerators><KeyboardAccelerator Modifiers="Control" Key="P" /></MenuFlyoutItem.KeyboardAccelerators>
+                    </MenuFlyoutItem>
                     <MenuFlyoutItem Text="Exit" Click="Exit_Click">
                         <MenuFlyoutItem.KeyboardAccelerators><KeyboardAccelerator Modifiers="Menu" Key="F4" /></MenuFlyoutItem.KeyboardAccelerators>
                     </MenuFlyoutItem>
@@ -102,6 +105,8 @@
                     <MenuFlyoutItem Text="Time" Click="Window_Click" Tag="time" />
                     <MenuFlyoutItem Text="Static Mappings" Click="Window_Click" Tag="mappings" />
                     <MenuFlyoutItem Text="P-code Stepper" Click="Window_Click" Tag="pcode" />
+                    <MenuFlyoutSeparator />
+                    <ToggleMenuFlyoutItem x:Name="ShowGhidraItem" Text="Show Ghidra windows" Click="ShowGhidra_Click" />
                 </MenuBarItem>
 
                 <MenuBarItem x:Name="ToolsMenu" Title="Tools">

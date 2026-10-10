@@ -76,20 +76,20 @@ public sealed partial class CodeBrowserPage : Page
                         var a = i.GetProperty("address").ToString();
                         Listing.Add(new Row($"{a}   {i.GetProperty("instruction")}", a));
                     }
-                DecompileText.Text = GhidraClient.Pretty(await c.GetAsync($"decompile_function?address={GhidraClient.Hex(entry)}"));
+                DecompileText.SetCode(GhidraClient.Pretty(await c.GetAsync($"decompile_function?address={GhidraClient.Hex(entry)}")));
             }
             else if (entry is null)
             {
                 _functionEntry = null;
                 Listing.Clear();
-                DecompileText.Text = GhidraClient.Pretty(fn.RootElement.GetRawText());
+                DecompileText.SetCode(GhidraClient.Pretty(fn.RootElement.GetRawText()));
             }
 
             var hit = Listing.FirstOrDefault(r => string.Equals(r.Address, address, StringComparison.OrdinalIgnoreCase));
             if (hit is not null) { ListingView.SelectedItem = hit; ListingView.ScrollIntoView(hit, ScrollIntoViewAlignment.Leading); }
             await ShowBytesAsync(address);
         }
-        catch (Exception ex) { DecompileText.Text = ex.Message; }
+        catch (Exception ex) { DecompileText.SetCode(ex.Message); }
         finally { Busy.IsActive = false; }
     }
 

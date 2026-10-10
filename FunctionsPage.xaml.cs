@@ -34,7 +34,7 @@ public sealed partial class FunctionsPage : Page
                 await SelectAddressAsync(a);
             }
         }
-        catch (Exception ex) { DetailText.Text = $"Could not load functions: {ex.Message}\n\nOpen a program on the Program page."; }
+        catch (Exception ex) { DetailText.SetCode($"Could not load functions: {ex.Message}\n\nOpen a program on the Program page."); }
         finally { Busy.IsActive = false; }
     }
 
@@ -94,10 +94,15 @@ public sealed partial class FunctionsPage : Page
             _ => $"decompile_function?address={a}",
         };
         Busy.IsActive = true;
-        DetailText.Text = "Loading...";
-        try { DetailText.Text = GhidraClient.Pretty(await MainWindow.Client.GetAsync(path, ct)); }
+        DetailText.SetCode("Loading...");
+        try
+        {
+            var json = await MainWindow.Client.GetAsync(path, ct);
+            if (tab == "disassemble" && GhidraClient.AsListing(json) is { } listing) DetailText.SetCode(listing, CodeLang.Asm);
+            else DetailText.SetCode(GhidraClient.Pretty(json));
+        }
         catch (OperationCanceledException) { }
-        catch (Exception ex) { DetailText.Text = $"{path}\n\n{ex.Message}"; }
+        catch (Exception ex) { DetailText.SetCode($"{path}\n\n{ex.Message}"); }
         finally { if (!ct.IsCancellationRequested) Busy.IsActive = false; }
     }
 
@@ -108,7 +113,7 @@ public sealed partial class FunctionsPage : Page
     {
         try
         {
-            DetailText.Text = GhidraClient.Pretty(await action());
+            DetailText.SetCode(GhidraClient.Pretty(await action()));
             if (reload)
             {
                 var addr = _current?.Address;
@@ -117,7 +122,7 @@ public sealed partial class FunctionsPage : Page
                 if (addr is not null) await SelectAddressAsync(addr);
             }
         }
-        catch (Exception ex) { DetailText.Text = ex.Message; }
+        catch (Exception ex) { DetailText.SetCode(ex.Message); }
     }
 
     public async Task RenameAsync()

@@ -84,12 +84,12 @@ public sealed partial class ToolsPage : Page
         if (_tool is null) return;
         var values = _inputs.ToDictionary(kv => kv.Key, kv => kv.Value());
         var missing = _tool.Params.Where(p => p.Required && string.IsNullOrWhiteSpace(values.GetValueOrDefault(p.Name))).Select(p => p.Name).ToList();
-        if (missing.Count > 0) { ResultText.Text = $"Missing required: {string.Join(", ", missing)}"; return; }
+        if (missing.Count > 0) { ResultText.SetCode($"Missing required: {string.Join(", ", missing)}"); return; }
 
         Busy.IsActive = true;
         RunButton.IsEnabled = false;
-        try { ResultText.Text = GhidraClient.Pretty(await MainWindow.Client.CallAsync(_tool, values)); }
-        catch (Exception ex) { ResultText.Text = ex.Message; }
+        try { ResultText.SetCode(GhidraClient.Pretty(await MainWindow.Client.CallAsync(_tool, values))); }
+        catch (Exception ex) { ResultText.SetCode(ex.Message); }
         finally { Busy.IsActive = false; RunButton.IsEnabled = true; }
     }
 }

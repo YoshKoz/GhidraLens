@@ -19,7 +19,7 @@
 
         <Border Grid.Row="1" CornerRadius="8" Padding="16" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1">
             <ScrollViewer HorizontalScrollBarVisibility="Auto">
-                <TextBlock x:Name="ModulesText" FontFamily="Cascadia Mono, Consolas" FontSize="15" IsTextSelectionEnabled="True" />
+                <RichTextBlock x:Name="ModulesText" FontFamily="Cascadia Mono, Consolas" FontSize="15" IsTextSelectionEnabled="True" />
             </ScrollViewer>
         </Border>
 
@@ -38,7 +38,7 @@
                 </StackPanel>
             </StackPanel>
             <Border CornerRadius="8" Padding="16" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1">
-                <TextBlock x:Name="ResultText" FontFamily="Cascadia Mono, Consolas" FontSize="15" IsTextSelectionEnabled="True" TextWrapping="Wrap" />
+                <RichTextBlock x:Name="ResultText" FontFamily="Cascadia Mono, Consolas" FontSize="15" IsTextSelectionEnabled="True" TextWrapping="Wrap" />
             </Border>
         </StackPanel>
     </Grid>

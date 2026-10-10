@@ -45,7 +45,7 @@
                 Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
                 BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1">
             <ScrollViewer HorizontalScrollBarVisibility="Auto">
-                <TextBlock x:Name="InfoText" FontFamily="Cascadia Mono, Consolas" FontSize="16"
+                <RichTextBlock x:Name="InfoText" FontFamily="Cascadia Mono, Consolas" FontSize="16"
                            IsTextSelectionEnabled="True" TextWrapping="Wrap" />
             </ScrollViewer>
         </Border>

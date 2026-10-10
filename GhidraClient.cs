@@ -146,6 +146,26 @@ public sealed class GhidraClient
         return rows;
     }
 
+    // open_program does not make the program current when another one already is, so switch by project path.
+    public async Task<string> OpenAndActivateAsync(string projectPath, bool autoAnalyze)
+    {
+        var p = Uri.EscapeDataString(projectPath);
+        var opened = await GetAsync($"open_program?path={p}&auto_analyze={(autoAnalyze ? "true" : "false")}");
+        if (opened.Contains("\"success\":true")) await GetAsync($"switch_program?program={p}");
+        return opened;
+    }
+
+    public static string? AsListing(string json)
+    {
+        try
+        {
+            using var doc = JsonDocument.Parse(json);
+            if (!doc.RootElement.TryGetProperty("instructions", out var ins)) return null;
+            return string.Join('\n', ins.EnumerateArray().Select(i => $"{i.GetProperty("address")}   {i.GetProperty("instruction")}"));
+        }
+        catch (JsonException) { return null; }
+    }
+
     public static string Hex(string address) =>
         address.Contains(':') || address.StartsWith("0x", StringComparison.OrdinalIgnoreCase) ? address : "0x" + address;
 }

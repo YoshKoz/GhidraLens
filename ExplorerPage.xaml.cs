@@ -25,7 +25,7 @@ public sealed partial class ExplorerPage : Page
         }
         catch (Exception ex)
         {
-            DetailText.Text = $"Could not load {_endpoint}: {ex.Message}\n\nOpen a program on the Program page.";
+            DetailText.SetCode($"Could not load {_endpoint}: {ex.Message}\n\nOpen a program on the Program page.");
         }
         finally { Busy.IsActive = false; }
     }
@@ -48,17 +48,17 @@ public sealed partial class ExplorerPage : Page
         _detailCts = new CancellationTokenSource();
         if (row.Address is null || row.Address.StartsWith("EXTERNAL", StringComparison.OrdinalIgnoreCase))
         {
-            DetailText.Text = row.Text;
+            DetailText.SetCode(row.Text);
             return;
         }
-        DetailText.Text = "Loading references...";
+        DetailText.SetCode("Loading references...");
         try
         {
             var json = await MainWindow.Client.GetAsync($"get_xrefs_to?address={Uri.EscapeDataString(GhidraClient.Hex(row.Address))}&limit=500", _detailCts.Token);
-            DetailText.Text = $"{row.Text}\n\nReferences to {row.Address}:\n{GhidraClient.Pretty(json)}";
+            DetailText.SetCode($"{row.Text}\n\nReferences to {row.Address}:\n{GhidraClient.Pretty(json)}");
         }
         catch (OperationCanceledException) { }
-        catch (Exception ex) { DetailText.Text = $"{row.Text}\n\n{ex.Message}"; }
+        catch (Exception ex) { DetailText.SetCode($"{row.Text}\n\n{ex.Message}"); }
     }
 
     private void ItemsList_DoubleTapped(object sender, Microsoft.UI.Xaml.Input.DoubleTappedRoutedEventArgs e)

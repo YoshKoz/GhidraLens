@@ -56,8 +56,8 @@
                     Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
                     BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1">
                 <ScrollViewer HorizontalScrollBarVisibility="Auto">
-                    <TextBlock x:Name="DetailText" FontFamily="Cascadia Mono, Consolas" FontSize="17"
-                               IsTextSelectionEnabled="True" TextWrapping="NoWrap" Text="Select a function." />
+                    <RichTextBlock x:Name="DetailText" FontFamily="Cascadia Mono, Consolas" FontSize="17"
+                               IsTextSelectionEnabled="True" TextWrapping="NoWrap" />
                 </ScrollViewer>
             </Border>
             <ProgressRing x:Name="Busy" Grid.Row="1" Width="56" Height="56" IsActive="False" />

@@ -32,9 +32,8 @@
                 Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
                 BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1">
             <ScrollViewer HorizontalScrollBarVisibility="Auto">
-                <TextBlock x:Name="DetailText" FontFamily="Cascadia Mono, Consolas" FontSize="17"
-                           IsTextSelectionEnabled="True" TextWrapping="NoWrap"
-                           Text="Select an item." />
+                <RichTextBlock x:Name="DetailText" FontFamily="Cascadia Mono, Consolas" FontSize="17"
+                           IsTextSelectionEnabled="True" TextWrapping="NoWrap" />
             </ScrollViewer>
         </Border>
 

@@ -22,15 +22,15 @@ public sealed partial class TimePage : Page
         var c = MainWindow.Client;
         var status = await Safe(() => c.GetAsync("debugger/status"));
         StatusText.Text = string.Join(" ", status.Split(['\r', '\n', '{', '}'], StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries));
-        TracesText.Text = await Safe(() => c.GetAsync("debugger/traces"));
-        RegistersText.Text = await Safe(() => c.GetAsync("debugger/registers"));
-        StackText.Text = await Safe(() => c.GetAsync("debugger/stack_trace?depth=64"));
-        BreakpointsText.Text = await Safe(() => c.GetAsync("debugger/list_breakpoints"));
+        TracesText.SetCode(await Safe(() => c.GetAsync("debugger/traces")));
+        RegistersText.SetCode(await Safe(() => c.GetAsync("debugger/registers")));
+        StackText.SetCode(await Safe(() => c.GetAsync("debugger/stack_trace?depth=64")));
+        BreakpointsText.SetCode(await Safe(() => c.GetAsync("debugger/list_breakpoints")));
     }
 
     private async Task ActAsync(string path, object? body = null)
     {
-        ActionText.Text = await Safe(() => MainWindow.Client.PostAsync(path, body ?? new { }));
+        ActionText.SetCode(await Safe(() => MainWindow.Client.PostAsync(path, body ?? new { })));
         await RefreshAsync();
     }
 
@@ -41,8 +41,13 @@ public sealed partial class TimePage : Page
         picker.FileTypeFilter.Add(".exe");
         if (await picker.PickSingleFileAsync() is not { } file) return;
         var args = await MainWindow.Instance!.AskAsync("Launch", "Command-line arguments (optional)") ?? "";
-        ActionText.Text = $"Launching {file.Path}...";
-        await ActAsync("debugger/launch", new { executable_path = file.Path, args, cwd = Path.GetDirectoryName(file.Path) });
+        ActionText.SetCode($"Launching {file.Path}...");
+        var s = MainWindow.Host.Settings;
+        await ActAsync("debugger/launch", new
+        {
+            executable_path = file.Path, args, cwd = Path.GetDirectoryName(file.Path),
+            offer = s.DebuggerOffer, python_executable = s.DebuggerPython, timeout_seconds = 90,
+        });
     }
 
     private async void Resume_Click(object sender, RoutedEventArgs e) => await ActAsync("debugger/resume");

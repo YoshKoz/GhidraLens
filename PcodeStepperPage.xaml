@@ -45,7 +45,7 @@
                 </ListView.ItemContainerStyle>
                 <ListView.ItemTemplate>
                     <DataTemplate x:DataType="local:Row">
-                        <TextBlock Text="{x:Bind Text}" FontFamily="Cascadia Mono, Consolas" FontSize="15" />
+                        <TextBlock local:Highlighter.Pcode="{x:Bind Text}" FontFamily="Cascadia Mono, Consolas" FontSize="15" />
                     </DataTemplate>
                 </ListView.ItemTemplate>
             </ListView>
@@ -60,7 +60,7 @@
             <Border CornerRadius="8" Padding="16" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
                     BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1">
                 <ScrollViewer HorizontalScrollBarVisibility="Auto">
-                    <TextBlock x:Name="OpDetail" FontFamily="Cascadia Mono, Consolas" FontSize="15" IsTextSelectionEnabled="True" Text="Load a function to step through its P-code." />
+                    <RichTextBlock x:Name="OpDetail" FontFamily="Cascadia Mono, Consolas" FontSize="15" IsTextSelectionEnabled="True" />
                 </ScrollViewer>
             </Border>
             <StackPanel Grid.Row="1" Spacing="8">
@@ -76,7 +76,7 @@
             <Border Grid.Row="2" CornerRadius="8" Padding="16" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
                     BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1">
                 <ScrollViewer HorizontalScrollBarVisibility="Auto">
-                    <TextBlock x:Name="EmuResult" FontFamily="Cascadia Mono, Consolas" FontSize="15" IsTextSelectionEnabled="True" />
+                    <RichTextBlock x:Name="EmuResult" FontFamily="Cascadia Mono, Consolas" FontSize="15" IsTextSelectionEnabled="True" />
                 </ScrollViewer>
             </Border>
         </Grid>

@@ -44,23 +44,23 @@
 
         <Border Grid.Row="2" CornerRadius="8" Padding="16" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1">
             <Grid RowSpacing="4"><Grid.RowDefinitions><RowDefinition Height="Auto" /><RowDefinition Height="*" /></Grid.RowDefinitions><TextBlock Text="Time / traces" Style="{StaticResource CaptionTextBlockStyle}" Opacity="0.7" />
-                <ScrollViewer Grid.Row="1" HorizontalScrollBarVisibility="Auto"><TextBlock x:Name="TracesText" FontFamily="Cascadia Mono, Consolas" FontSize="15" IsTextSelectionEnabled="True" /></ScrollViewer></Grid>
+                <ScrollViewer Grid.Row="1" HorizontalScrollBarVisibility="Auto"><RichTextBlock x:Name="TracesText" FontFamily="Cascadia Mono, Consolas" FontSize="15" IsTextSelectionEnabled="True" /></ScrollViewer></Grid>
         </Border>
         <Border Grid.Row="2" Grid.Column="1" CornerRadius="8" Padding="16" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1">
             <Grid RowSpacing="4"><Grid.RowDefinitions><RowDefinition Height="Auto" /><RowDefinition Height="*" /></Grid.RowDefinitions><TextBlock Text="Registers" Style="{StaticResource CaptionTextBlockStyle}" Opacity="0.7" />
-                <ScrollViewer Grid.Row="1" HorizontalScrollBarVisibility="Auto"><TextBlock x:Name="RegistersText" FontFamily="Cascadia Mono, Consolas" FontSize="15" IsTextSelectionEnabled="True" /></ScrollViewer></Grid>
+                <ScrollViewer Grid.Row="1" HorizontalScrollBarVisibility="Auto"><RichTextBlock x:Name="RegistersText" FontFamily="Cascadia Mono, Consolas" FontSize="15" IsTextSelectionEnabled="True" /></ScrollViewer></Grid>
         </Border>
         <Border Grid.Row="2" Grid.Column="2" CornerRadius="8" Padding="16" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1">
             <Grid RowSpacing="4"><Grid.RowDefinitions><RowDefinition Height="Auto" /><RowDefinition Height="*" /></Grid.RowDefinitions><TextBlock Text="Stack" Style="{StaticResource CaptionTextBlockStyle}" Opacity="0.7" />
-                <ScrollViewer Grid.Row="1" HorizontalScrollBarVisibility="Auto"><TextBlock x:Name="StackText" FontFamily="Cascadia Mono, Consolas" FontSize="15" IsTextSelectionEnabled="True" /></ScrollViewer></Grid>
+                <ScrollViewer Grid.Row="1" HorizontalScrollBarVisibility="Auto"><RichTextBlock x:Name="StackText" FontFamily="Cascadia Mono, Consolas" FontSize="15" IsTextSelectionEnabled="True" /></ScrollViewer></Grid>
         </Border>
         <Border Grid.Row="3" Grid.ColumnSpan="2" CornerRadius="8" Padding="16" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1">
             <Grid RowSpacing="4"><Grid.RowDefinitions><RowDefinition Height="Auto" /><RowDefinition Height="*" /></Grid.RowDefinitions><TextBlock Text="Breakpoints" Style="{StaticResource CaptionTextBlockStyle}" Opacity="0.7" />
-                <ScrollViewer Grid.Row="1" HorizontalScrollBarVisibility="Auto"><TextBlock x:Name="BreakpointsText" FontFamily="Cascadia Mono, Consolas" FontSize="15" IsTextSelectionEnabled="True" /></ScrollViewer></Grid>
+                <ScrollViewer Grid.Row="1" HorizontalScrollBarVisibility="Auto"><RichTextBlock x:Name="BreakpointsText" FontFamily="Cascadia Mono, Consolas" FontSize="15" IsTextSelectionEnabled="True" /></ScrollViewer></Grid>
         </Border>
         <Border Grid.Row="3" Grid.Column="2" CornerRadius="8" Padding="16" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1">
             <Grid RowSpacing="4"><Grid.RowDefinitions><RowDefinition Height="Auto" /><RowDefinition Height="*" /></Grid.RowDefinitions><TextBlock Text="Last action" Style="{StaticResource CaptionTextBlockStyle}" Opacity="0.7" />
-                <ScrollViewer Grid.Row="1" HorizontalScrollBarVisibility="Auto"><TextBlock x:Name="ActionText" FontFamily="Cascadia Mono, Consolas" FontSize="15" IsTextSelectionEnabled="True" TextWrapping="Wrap" /></ScrollViewer></Grid>
+                <ScrollViewer Grid.Row="1" HorizontalScrollBarVisibility="Auto"><RichTextBlock x:Name="ActionText" FontFamily="Cascadia Mono, Consolas" FontSize="15" IsTextSelectionEnabled="True" TextWrapping="Wrap" /></ScrollViewer></Grid>
         </Border>
     </Grid>
 </Page>

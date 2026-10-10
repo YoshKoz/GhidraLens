@@ -9,9 +9,11 @@ namespace GhidraLens;
 public sealed partial class MainWindow : Window
 {
     public static GhidraClient Client { get; } = new();
+    public static GhidraHost Host { get; } = new(Client);
     public static MainWindow? Instance { get; private set; }
 
     private string? _programName;
+    private bool _closing;
 
     public MainWindow()
     {
@@ -23,7 +25,63 @@ public sealed partial class MainWindow : Window
         Title = "Ghidra Lens";
         AppWindow.SetIcon(Path.Combine(AppContext.BaseDirectory, "Assets", "GhidraLens.ico"));
         AppWindow.Resize(new Windows.Graphics.SizeInt32(1700, 1000));
-        _ = ConnectAsync();
+        AppWindow.Closing += AppWindow_Closing;
+        ShowGhidraItem.IsChecked = !Host.Settings.HideGhidraWindows;
+        _ = StartupAsync();
+    }
+
+    private async Task StartupAsync()
+    {
+        var status = new Progress<string>(s => StatusText.Text = s);
+        if (!(await Client.PingAsync()).Ok)
+        {
+            StatusDot.Fill = new SolidColorBrush(Microsoft.UI.Colors.Orange);
+            if (await Host.EnsureRunningAsync(status))
+            {
+                await Host.RestoreSessionAsync(status);
+                // open_program returns before the plugin reports the program as active.
+                for (var i = 0; i < 20 && Host.Settings.LastProgramPath is not null; i++)
+                {
+                    if ((await Client.PingAsync()).Message.Contains("with program", StringComparison.OrdinalIgnoreCase)) break;
+                    await Task.Delay(1000);
+                }
+            }
+        }
+        await ConnectAsync();
+    }
+
+    private async void AppWindow_Closing(Microsoft.UI.Windowing.AppWindow sender, Microsoft.UI.Windowing.AppWindowClosingEventArgs args)
+    {
+        if (_closing || !Host.StartedByUs) return;
+        args.Cancel = true;
+        _closing = true;
+        StatusText.Text = "Saving and stopping Ghidra...";
+        await Host.ShutdownAsync();
+        Close();
+    }
+
+    private void ShowGhidra_Click(object sender, RoutedEventArgs e) => Host.SetWindowsVisible(ShowGhidraItem.IsChecked);
+
+    private async void Settings_Click(object sender, RoutedEventArgs e)
+    {
+        var s = Host.Settings;
+        var dir = new TextBox { Header = "Ghidra install folder", Text = s.GhidraInstallDir, MinWidth = 520 };
+        var auto = new CheckBox { Content = "Start Ghidra automatically when it is not running", IsChecked = s.AutoStartGhidra };
+        var hide = new CheckBox { Content = "Hide Ghidra's own windows", IsChecked = s.HideGhidraWindows };
+        var stop = new CheckBox { Content = "Save and stop Ghidra when Ghidra Lens closes (only if Ghidra Lens started it)", IsChecked = s.StopGhidraOnExit };
+        var py = new TextBox { Header = "Python for the dbgeng debugger agent (needs ghidradbg installed)", Text = s.DebuggerPython, MinWidth = 520 };
+        var panel = new StackPanel { Spacing = 12 };
+        foreach (var c in new UIElement[] { dir, auto, hide, stop, py }) panel.Children.Add(c);
+        var dlg = new ContentDialog { Title = "Settings", Content = panel, PrimaryButtonText = "Save", CloseButtonText = "Cancel", DefaultButton = ContentDialogButton.Primary, XamlRoot = Content.XamlRoot };
+        if (await ShowDialogAsync(dlg) != ContentDialogResult.Primary) return;
+        s.GhidraInstallDir = dir.Text.Trim();
+        s.AutoStartGhidra = auto.IsChecked == true;
+        s.HideGhidraWindows = hide.IsChecked == true;
+        s.StopGhidraOnExit = stop.IsChecked == true;
+        s.DebuggerPython = py.Text.Trim();
+        s.Save();
+        ShowGhidraItem.IsChecked = !s.HideGhidraWindows;
+        Host.SetWindowsVisible(!s.HideGhidraWindows);
     }
 
     public async Task ConnectAsync()
@@ -118,6 +176,16 @@ public sealed partial class MainWindow : Window
         }
     }
 
+    // WinUI crashes (0xc000027b) if a second ContentDialog opens while one is showing; serialize them.
+    private readonly SemaphoreSlim _dialogGate = new(1, 1);
+
+    private async Task<ContentDialogResult> ShowDialogAsync(ContentDialog dlg)
+    {
+        await _dialogGate.WaitAsync();
+        try { return await dlg.ShowAsync(); }
+        finally { _dialogGate.Release(); }
+    }
+
     public async Task<string?> AskAsync(string title, string label, string initial = "", bool multiline = false)
     {
         var box = new TextBox { Header = label, Text = initial, FontSize = 18, AcceptsReturn = multiline, MinWidth = 480, MinHeight = multiline ? 120 : 0, TextWrapping = multiline ? TextWrapping.Wrap : TextWrapping.NoWrap };
@@ -126,7 +194,7 @@ public sealed partial class MainWindow : Window
             Title = title, Content = box, PrimaryButtonText = "OK", CloseButtonText = "Cancel",
             DefaultButton = ContentDialogButton.Primary, XamlRoot = Content.XamlRoot,
         };
-        return await dlg.ShowAsync() == ContentDialogResult.Primary ? box.Text.Trim() : null;
+        return await ShowDialogAsync(dlg) == ContentDialogResult.Primary ? box.Text.Trim() : null;
     }
 
     public async Task ShowResultAsync(string title, string text)
@@ -137,11 +205,18 @@ public sealed partial class MainWindow : Window
             Content = new ScrollViewer
             {
                 MaxHeight = 640, MinWidth = 720, HorizontalScrollBarVisibility = ScrollBarVisibility.Auto,
-                Content = new TextBlock { Text = GhidraClient.Pretty(text), FontFamily = new FontFamily("Cascadia Mono, Consolas"), FontSize = 15, IsTextSelectionEnabled = true },
+                Content = CodeBlock(GhidraClient.Pretty(text)),
             },
         };
         dlg.Resources["ContentDialogMaxWidth"] = 1400d;
-        await dlg.ShowAsync();
+        await ShowDialogAsync(dlg);
+    }
+
+    private static RichTextBlock CodeBlock(string text)
+    {
+        var box = new RichTextBlock { FontFamily = new FontFamily("Cascadia Mono, Consolas"), FontSize = 15, IsTextSelectionEnabled = true };
+        box.SetCode(text);
+        return box;
     }
 
     private async Task RunAsync(string title, Func<Task<string>> call, bool reconnect = false)

@@ -30,9 +30,9 @@ public sealed partial class ProgramPage : Page
             var info = await SafeAsync(() => c.GetAsync("get_current_program_info"));
             var open = await SafeAsync(() => c.GetAsync("list_open_programs"));
             var meta = await SafeAsync(() => c.GetAsync("get_metadata"));
-            InfoText.Text = $"Current program\n{GhidraClient.Pretty(info)}\n\nOpen programs\n{GhidraClient.Pretty(open)}\n\nMetadata\n{GhidraClient.Pretty(meta)}";
+            InfoText.SetCode($"Current program\n{GhidraClient.Pretty(info)}\n\nOpen programs\n{GhidraClient.Pretty(open)}\n\nMetadata\n{GhidraClient.Pretty(meta)}");
         }
-        catch (Exception ex) { InfoText.Text = $"Could not read project: {ex.Message}"; }
+        catch (Exception ex) { InfoText.SetCode($"Could not read project: {ex.Message}"); }
     }
 
     private static async Task<string> SafeAsync(Func<Task<string>> f)
@@ -43,10 +43,10 @@ public sealed partial class ProgramPage : Page
     private async Task OpenSelectedAsync()
     {
         if (FilesList.SelectedItem is not Row row) return;
-        InfoText.Text = $"Opening {row.Text}...";
-        var auto = AutoAnalyze.IsChecked == true ? "true" : "false";
-        var result = await SafeAsync(() => MainWindow.Client.GetAsync($"open_program?path={Uri.EscapeDataString(row.Text)}&auto_analyze={auto}"));
-        InfoText.Text = GhidraClient.Pretty(result);
+        InfoText.SetCode($"Opening {row.Text}...");
+        var result = await SafeAsync(() => MainWindow.Client.OpenAndActivateAsync(row.Text, AutoAnalyze.IsChecked == true));
+        InfoText.SetCode(GhidraClient.Pretty(result));
+        if (result.Contains("\"success\":true")) MainWindow.Host.RememberProgram(row.Text);
         if (MainWindow.Instance is { } w) await w.ConnectAsync();
     }
 
@@ -55,5 +55,5 @@ public sealed partial class ProgramPage : Page
     private void Refresh_Click(object sender, RoutedEventArgs e) => _ = RefreshAsync();
 
     private async void Save_Click(object sender, RoutedEventArgs e) =>
-        InfoText.Text = GhidraClient.Pretty(await SafeAsync(() => MainWindow.Client.GetAsync("save_program")));
+        InfoText.SetCode(GhidraClient.Pretty(await SafeAsync(() => MainWindow.Client.GetAsync("save_program"))));
 }
